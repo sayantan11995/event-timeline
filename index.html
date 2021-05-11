@@ -41,10 +41,31 @@
   </style>
 </head>
 <body>
-<div id="visualization" style="margin-top:75px"></div>
+<div>
+	<h1> Event Timeline from Collected Works of Mahatma Gandhi (1930-1935) </h1>
+</div>
+<div id="visualization" style="margin-top:15px"></div>
 <script type="text/javascript">
   // DOM element where the Timeline will be attached
   var container = document.getElementById('visualization');
+  
+  // Configuration for the Timeline
+  var options = {
+  width: '90%',
+  height: '60%',
+  clickToUse: true,
+  <!-- stack: false, -->
+  tooltip: {
+	overflowMethod: 'cap'
+	},
+  //selectable: false,
+  //cluster: true,
+  //timeAxis: {scale: 'year', step: 1},
+  //height: '30px',
+  margin: {
+    item: 20
+	}
+  };
 
   // Create a DataSet (allows two way data-binding)
   var items = new vis.DataSet([
@@ -220,23 +241,7 @@
   ]
 );
 
-  // Configuration for the Timeline
-  var options = {
-  width: '90%',
-  height: '60%',
-  clickToUse: true,
-  <!-- stack: false, -->
-  tooltip: {
-	overflowMethod: 'cap'
-	},
-  //selectable: false,
-  //cluster: true,
-  //timeAxis: {scale: 'year', step: 1},
-  //height: '30px',
-  margin: {
-    item: 20
-	}
-  };
+  
 
   // Create a Timeline
   var timeline = new vis.Timeline(container, items, options);
