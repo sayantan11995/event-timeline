@@ -7,9 +7,10 @@
   <style type="text/css">
     #visualization {
       width: 100%;
-	  height: 800px;
+	  height: 90vh;
       border: 1px solid lightgray;
 	  background-color: RGBA(0,0,0,0.1);
+	  
     }
 	.vis-timeline {
   position: relative;
@@ -38,13 +39,67 @@
   .vis-time-axis {
     background: #f5f5f5;
   }
+  /* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
   </style>
 </head>
 <body>
 <div>
-	<h1> Event Timeline from Collected Works of Mahatma Gandhi (1930-1935) </h1>
+	<h1> Event Timeline from Collected Works of Mahatma Gandhi (Year-range: 1930-1935) </h1>
 </div>
-<div id="visualization" style="margin-top:15px"></div>
+<div style="text-align: center; margin-top:15px">
+<button id="reset" style="font-size: 20px; "><span > Reset Timeline</span></button>
+</div>
+<!-- The Modal -->
+<div id="myModal" class="modal" >
+
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p class='modal-text'></p>
+  </div>
+
+</div>
+<div style="background-color: RGBA(0,0,0,0); margin-bottom: -20px; text-align: center">
+	Drag the bars to view more. Double click on a particular event to get details. Scroll to zoom.
+</div>
+<div id="visualization" ></div>
 <script type="text/javascript">
   // DOM element where the Timeline will be attached
   var container = document.getElementById('visualization');
@@ -52,18 +107,22 @@
   // Configuration for the Timeline
   var options = {
   width: '90%',
-  height: '60%',
-  clickToUse: true,
+  height: '80%',
+  clickToUse: false,
   <!-- stack: false, -->
   tooltip: {
-	overflowMethod: 'cap'
+	overflowMethod: 'cap',
+	template: function (data) {
+    return '<p>' + data.title + '</p>';
+	}
 	},
+  showTooltips: false,
   //selectable: false,
   //cluster: true,
   //timeAxis: {scale: 'year', step: 1},
   //height: '30px',
   margin: {
-    item: 20
+    item: 6
 	}
   };
 
@@ -245,6 +304,40 @@
 
   // Create a Timeline
   var timeline = new vis.Timeline(container, items, options);
+  
+  // Get the modal
+var modal = document.getElementById("myModal");
+
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+var mdl = document.getElementsByClassName("modal-text");
+  timeline.on('doubleClick', function (properties) {
+  var selected = properties.item;
+  
+  timeline.focus(properties.item);
+  console.log(selected);
+  console.log(items.get(properties.item).title);
+  if (selected != null){
+  console.log(mdl);
+  mdl[0].innerHTML = items.get(properties.item).title;
+  modal.style.display = "block";
+  }
+});
+document.getElementById('reset').onclick    = function () { timeline.fit(); };
 </script>
 </body>
 </html>
